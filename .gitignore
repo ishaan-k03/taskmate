@@ -1,0 +1,10 @@
+.pytest_cache/
+.vscode/
+
+taskmate/__pycache__/
+taskmate/secret_settings.py
+
+todolist_app/__pycache__/
+todolist_app/migrations/
+
+practice.py
