@@ -8,3 +8,4 @@ todolist_app/__pycache__/
 todolist_app/migrations/
 
 practice.py
+db.sqlite3
