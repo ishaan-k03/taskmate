@@ -1,12 +1,14 @@
-from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import redirect, render
 
 from todolist_app.forms import TaskForm
 from todolist_app.models import TaskList
 
 
 # Create your views here.
+@login_required
 def todolist(request):
     if request.method == "POST":
         form = TaskForm(request.POST or None)
@@ -20,7 +22,7 @@ def todolist(request):
                     )
                 ),
             )
-        else: 
+        else:
             messages.warning(request, ("Please Write your task before adding..."))
         return redirect("todolist")
     else:
@@ -34,6 +36,7 @@ def todolist(request):
         return render(request, "todolist.html", context)
 
 
+@login_required
 def change_status(request, task_id):
     task = TaskList.objects.get(pk=task_id)
     task.done = not task.done
@@ -50,6 +53,7 @@ def change_status(request, task_id):
     return redirect("todolist")
 
 
+@login_required
 def edit_task(request, task_id):
     task_obj = TaskList.objects.get(pk=task_id)
     if request.method == "POST":
@@ -64,6 +68,7 @@ def edit_task(request, task_id):
         return render(request, "edit.html", context)
 
 
+@login_required
 def delete_task(request, task_id):
     task = TaskList.objects.get(pk=task_id)
     task.delete()

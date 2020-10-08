@@ -47,7 +47,7 @@ Todo List Manage - Taskmate
             {% for obj in all_tasks %}
             {% if obj.done %}
             <tr class="table-success row">
-                <td class="col-lg-6">{{ obj.task }}</td>
+                <td class="col-lg-6"><del>{{ obj.task }}</del></td>
                 <td class="col-lg-3"><a href="{% url 'change_status' obj.id %}"><button type="button"
                             class="btn btn-success">Mark
                             This Pending</button></a></td>
