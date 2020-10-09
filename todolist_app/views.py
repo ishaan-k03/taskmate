@@ -40,17 +40,21 @@ def todolist(request):
 @login_required
 def change_status(request, task_id):
     task = TaskList.objects.get(pk=task_id)
-    task.done = not task.done
-    task.save()
+    if task.owner == request.user:
+        task.done = not task.done
+        task.save()
 
-    messages.error(
-        request,
-        (
-            "Task -> {0} status is Updated".format(
-                task.task,
-            )
-        ),
-    )
+        messages.error(
+            request,
+            (
+                "Task -> {0} status is Updated".format(
+                    task.task,
+                )
+            ),
+        )
+    else:
+        messages.error(request, ("Check your link before going for it!!!"))
+
     return redirect("todolist")
 
 
@@ -72,16 +76,21 @@ def edit_task(request, task_id):
 @login_required
 def delete_task(request, task_id):
     task = TaskList.objects.get(pk=task_id)
-    task.delete()
+    if task.owner == request.user:
+        task.delete()
 
-    messages.error(
-        request,
-        (
-            "Task -> {0} got deleted!".format(
-                task.task,
-            )
-        ),
-    )
+        messages.error(
+            request,
+            (
+                "Task -> {0} got deleted!".format(
+                    task.task,
+                )
+            ),
+        )
+    
+    else:
+        messages.error(request, ("Check your link before going for it!!!"))
+        
     return redirect("todolist")
 
 
