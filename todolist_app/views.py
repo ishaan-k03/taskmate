@@ -13,6 +13,7 @@ def todolist(request):
     if request.method == "POST":
         form = TaskForm(request.POST or None)
         if form.is_valid():
+            form.save(commit=False).owner = request.user
             form.save()
             messages.success(
                 request,
@@ -26,7 +27,7 @@ def todolist(request):
             messages.warning(request, ("Please Write your task before adding..."))
         return redirect("todolist")
     else:
-        all_tasks = TaskList.objects.all()
+        all_tasks = TaskList.objects.filter(owner=request.user)
 
         paginator = Paginator(all_tasks, 4)
         page = request.GET.get("pg")
