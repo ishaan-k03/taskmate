@@ -12,7 +12,7 @@
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 
     <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/gif" sizes="16x16">
-    
+
     <title>
         {% block title %}
         {% endblock title %}
@@ -33,6 +33,23 @@
                 <a class="nav-link" href="{% url 'about' %}">About Us</a>
             </div>
         </div>
+
+        {% if user.is_authenticated %}
+        <div class="form-inline my-2 my-lg-0">
+            <div class="bg-dark text-white">Welcome {{ user.username }}</div>
+            <a class="nav-link" href="{% url 'logout' %}">
+                <button class="btn my-2 my-sm-0 bg-light" type="submit">Logout</button>
+            </a>
+        </div>
+        {% else %}
+        <a class="nav-link" href="{% url 'register' %}">
+            <button class="btn my-2 my-sm-0 bg-light" type="submit">Register</button>
+        </a>
+        <a class="nav-link" href="{% url 'login' %}">
+            <button class="btn my-2 my-sm-0 bg-light" type="submit">LogIn</button>
+        </a>
+        {% endif %}
+
     </nav>
 </head>
 

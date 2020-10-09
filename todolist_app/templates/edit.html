@@ -10,6 +10,8 @@ Edit Task - Taskmate
 <div class="container">
     <br>
 
+    {% if task_obj.owner == request.user %}
+
     <form method="POST" class="row">
         {% csrf_token %}
         <label class="col-lg-2"></label>
@@ -18,5 +20,8 @@ Edit Task - Taskmate
         <input type="hidden" name="done" value="{{ task_obj.done }}">
         <button type="submit" class="btn btn-primary col-lg-2">Update Task</button>
     </form>
+    {% else %}
+    <p>Access Restricted, You are not Allowed.</p>
+    {% endif %}
 </div>
 {% endblock content %}

@@ -1,16 +1,19 @@
-from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import redirect, render
 
 from todolist_app.forms import TaskForm
 from todolist_app.models import TaskList
 
 
 # Create your views here.
+@login_required
 def todolist(request):
     if request.method == "POST":
         form = TaskForm(request.POST or None)
         if form.is_valid():
+            form.save(commit=False).owner = request.user
             form.save()
             messages.success(
                 request,
@@ -20,11 +23,11 @@ def todolist(request):
                     )
                 ),
             )
-        else: 
+        else:
             messages.warning(request, ("Please Write your task before adding..."))
         return redirect("todolist")
     else:
-        all_tasks = TaskList.objects.all()
+        all_tasks = TaskList.objects.filter(owner=request.user)
 
         paginator = Paginator(all_tasks, 4)
         page = request.GET.get("pg")
@@ -34,22 +37,28 @@ def todolist(request):
         return render(request, "todolist.html", context)
 
 
+@login_required
 def change_status(request, task_id):
     task = TaskList.objects.get(pk=task_id)
-    task.done = not task.done
-    task.save()
+    if task.owner == request.user:
+        task.done = not task.done
+        task.save()
 
-    messages.error(
-        request,
-        (
-            "Task -> {0} status is Updated".format(
-                task.task,
-            )
-        ),
-    )
+        messages.error(
+            request,
+            (
+                "Task -> {0} status is Updated".format(
+                    task.task,
+                )
+            ),
+        )
+    else:
+        messages.error(request, ("Check your link before going for it!!!"))
+
     return redirect("todolist")
 
 
+@login_required
 def edit_task(request, task_id):
     task_obj = TaskList.objects.get(pk=task_id)
     if request.method == "POST":
@@ -64,18 +73,24 @@ def edit_task(request, task_id):
         return render(request, "edit.html", context)
 
 
+@login_required
 def delete_task(request, task_id):
     task = TaskList.objects.get(pk=task_id)
-    task.delete()
+    if task.owner == request.user:
+        task.delete()
 
-    messages.error(
-        request,
-        (
-            "Task -> {0} got deleted!".format(
-                task.task,
-            )
-        ),
-    )
+        messages.error(
+            request,
+            (
+                "Task -> {0} got deleted!".format(
+                    task.task,
+                )
+            ),
+        )
+    
+    else:
+        messages.error(request, ("Check your link before going for it!!!"))
+        
     return redirect("todolist")
 
 
