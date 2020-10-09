@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+import django_heroku
 import os
 import environ
 
@@ -31,7 +31,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DJANGO_DEBUG")
 
-ALLOWED_HOSTS = [env("DJANGO_ALLOWED_HOST")]
+ALLOWED_HOSTS = [env("DJANGO_ALLOWED_HOSTS")]
 
 
 # Application definition
@@ -133,3 +133,5 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 LOGIN_REDIRECT_URL = "todolist"
 LOGIN_URL = "login"
+
+django_heroku.settings(locals)
